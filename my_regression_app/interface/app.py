@@ -31,11 +31,11 @@ def validate_lineal_inputs(country, year, adult_mortality, expenditure_perce, me
     if year < 1900 or year > 2100:
         errors.append("❌ Año debe estar entre 1900 y 2100")
     
-    if adult_mortality < 0 or adult_mortality > 1000:
-        errors.append("❌ Mortalidad adulta debe estar entre 0 y 1000")
+    if adult_mortality < 0 or adult_mortality > 450:
+        errors.append("❌ Mortalidad adulta debe estar entre 0 y 450")
     
-    if expenditure_perce < 0 or expenditure_perce > 1000:
-        errors.append("❌ Gasto porcentual debe estar entre 0 y 1000")
+    if expenditure_perce < 0 or expenditure_perce > 7000:
+        errors.append("❌ Gasto porcentual debe estar entre 0 y 7000")
     
     if measles < 0:
         errors.append("❌ Casos de sarampión no puede ser negativo")
@@ -43,23 +43,23 @@ def validate_lineal_inputs(country, year, adult_mortality, expenditure_perce, me
     if five_deaths < 0:
         errors.append("❌ Muertes menores de 5 años no puede ser negativo")
     
-    if polio < 0 or polio > 1000:
-        errors.append("❌ Tasa de polio debe estar entre 0 y 1000")
+    if polio < 0 or polio > 100:
+        errors.append("❌ Tasa de polio debe estar entre 0 y 100")
     
-    if total_exp < 0 or total_exp > 1000:
-        errors.append("❌ Gasto total debe estar entre 0 y 1000")
+    if total_exp < 0 or total_exp > 100:
+        errors.append("❌ Gasto total debe estar entre 0 y 100")
     
-    if hiv < 0 or hiv > 500:
-        errors.append("❌ Tasa de HIV/SIDA debe estar entre 0 y 500")
+    if hiv < 0 or hiv > 15:
+        errors.append("❌ Tasa de HIV/SIDA debe estar entre 0 y 15")
     
-    if thinness < 0 or thinness > 500:
-        errors.append("❌ Delgadez 10-19 años debe estar entre 0 y 500")
+    if thinness < 0 or thinness > 20:
+        errors.append("❌ Delgadez 10-19 años debe estar entre 0 y 20")
     
-    if income_composition < 0 or income_composition > 1:
-        errors.append("❌ Composición de ingresos debe estar entre 0 y 1")
+    if income_composition < 0.2 or income_composition > 1:
+        errors.append("❌ Composición de ingresos debe estar entre 0.2 y 1")
     
-    if schooling < 0 or schooling > 100:
-        errors.append("❌ Escolaridad debe estar entre 0 y 100")
+    if schooling < 0 or schooling > 20:
+        errors.append("❌ Escolaridad debe estar entre 0 y 20")
     
     if status_dev not in [0, 1]:
         errors.append("❌ Estado de desarrollo debe ser 0 (NO) o 1 (SÍ)")
@@ -88,8 +88,8 @@ def validate_logistic_inputs(age, bmi, former_smoke, never_smoke, smokes, glucos
     if sum(smoking_fields) > 1:
         errors.append("❌ Las opciones de tabaquismo no coinciden")
     
-    if glucose < 50 or glucose > 300:
-        errors.append("❌ Nivel de glucosa debe estar entre 50 y 300 mg/dL")
+    if glucose < 55 or glucose > 270:
+        errors.append("❌ Nivel de glucosa debe estar entre 55 y 270 mg/dL")
     
     return "\n".join(errors) if errors else None
 
@@ -202,18 +202,18 @@ with gr.Blocks(title="App de Regresión", theme=gr.themes.Soft(
         with gr.Row():
             with gr.Column(scale=3):
                 country_dropdown = gr.Dropdown(choices=country_cols, label="País")
-                year_input = gr.Number(label="Year", minimum=1900, maximum=2100)
-                adult_mortality = gr.Number(label="Adult Mortality", minimum=0, maximum=1000)
-                expenditure_perce = gr.Number(label="Percentage expenditure", minimum=0, maximum=1000)
-                measles = gr.Number(label="Measles", minimum=0)
-                five_deaths = gr.Number(label="Under-five deaths", minimum=0)
-                polio_input = gr.Number(label="Polio", minimum=0, maximum=1000)
-                total_exp = gr.Number(label="Total expenditure", minimum=0, maximum=1000)
-                hiv_input = gr.Number(label="HIV/AIDS", minimum=0, maximum=500)
-                thiness_input = gr.Number(label="Thinness 10-19 years", minimum=0, maximum=500)
-                compos_input = gr.Number(label="Income composition of resources", minimum=0, maximum=1)
-                schooling = gr.Number(label="Schooling", minimum=0, maximum=100)
-                dev_input = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="developing",value=0)
+                year_input = gr.Number(label="Año: [2000-2015]", minimum=1900, maximum=2100)
+                adult_mortality = gr.Number(label="Mortalidad adulta [1-450]", minimum=0, maximum=450)
+                expenditure_perce = gr.Number(label="Gasto porcentual [0.005-7000]", minimum=0, maximum=7000)
+                measles = gr.Number(label="Sarampión [0–40000]", minimum=0,maximum=40000)
+                five_deaths = gr.Number(label="Muertes de menores de cinco años [0-100]", minimum=0,maximum=100)
+                polio_input = gr.Number(label="Polio (% inmunizados)  [0-100]", minimum=0, maximum=100)
+                total_exp = gr.Number(label="Gasto total (% PIB) [0-17.9]", minimum=0, maximum=18)
+                hiv_input = gr.Number(label="VIH/SIDA [0.1-15]", minimum=0, maximum=15)
+                thiness_input = gr.Number(label="Delgadez 10-19 años [0-20]", minimum=0, maximum=20)
+                compos_input = gr.Number(label="Composición de ingresos de los recursos [0.2-1]", minimum=0.2, maximum=1)
+                schooling = gr.Number(label="Enseñanza [0-20] años", minimum=0, maximum=20)
+                dev_input = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="En desarrollo",value=0)
 
                 base_inputs = [
                     year_input, adult_mortality, expenditure_perce, measles, five_deaths,
@@ -235,12 +235,12 @@ with gr.Blocks(title="App de Regresión", theme=gr.themes.Soft(
 
         with gr.Row():
             with gr.Column(scale=3):
-                age_input = gr.Number(label="Age", minimum=0, maximum=120)
-                bmi_input = gr.Number(label="BMI", minimum=10, maximum=60)
-                former_smoke = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="former_smoke",value=0)
-                never_smoke = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="never_smoke",value=0)
-                smokes = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="smokes",value=0)
-                glucose_input = gr.Number(label="Avg glucose level", minimum=50, maximum=300)
+                age_input = gr.Number(label="Edad", minimum=0, maximum=120)
+                bmi_input = gr.Number(label="IMC (Índice de masa corporal) [10-70]", minimum=10, maximum=70)
+                former_smoke = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="Ex-fumador",value=0)
+                never_smoke = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="Nunca ha fumado",value=0)
+                smokes = gr.Dropdown(choices=[("No", 0),("Si", 1)], label="Fuma",value=0)
+                glucose_input = gr.Number(label="Nivel promedio de glucosa [55-270]", minimum=54, maximum=270)
 
                 inputs_log = [
                     age_input, bmi_input, former_smoke, never_smoke, smokes, glucose_input
